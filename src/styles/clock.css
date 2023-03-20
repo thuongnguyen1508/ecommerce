@@ -1,0 +1,18 @@
+.clock-data--digit {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+}
+
+
+.clock-data--string {
+    font-size: 1rem;
+}
+
+.clock-data {
+    text-align: center;
+}
+
+
+.clock-wrapper {
+    font-family: 'Open Sans', sans-serif;
+}

@@ -1,0 +1,16 @@
+.account-section {
+  padding-top: 20vh;
+  height: 100vh;
+}
+
+.account-section__form {
+  min-width: 400px;
+  max-width: 500px;
+}
+
+@media (max-width: 575.98px) {
+  .account-section__form {
+    width: 100%;
+    min-width: 0;
+  }
+}

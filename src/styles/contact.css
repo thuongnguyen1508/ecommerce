@@ -1,0 +1,45 @@
+.contact-form input {
+    border-radius: 0;
+}
+
+.submit-contact {
+    width: 100px;
+}
+
+.div-submit-contact {
+    padding: 0.75rem 0;
+}
+
+.contact-input {
+    transition: all 0.5s ease;
+    padding-left: 0 !important;
+    border-radius: 0;
+}
+
+.contact-input:focus {
+    padding-left: 0.8rem !important;
+}
+
+.contact-submit {
+    border-radius: 0.5rem !important;
+    width: 200px;
+    padding: 1rem;
+}
+
+.error {
+    color: red;
+    display: none;
+    padding-top: 10px;
+}
+
+.bread_contact {
+    margin-top: 2rem;
+}
+
+.line-con {
+    width: 12rem;
+    height: 2px;
+    color: var(--primary-color-dark);
+    background-color: var(--primary-color-dark);
+    opacity: unset;
+}

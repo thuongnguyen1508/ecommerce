@@ -1,0 +1,4 @@
+.category-selector:hover {
+  background-color: var(--light);
+  color: var(--primary-color-dark);
+}

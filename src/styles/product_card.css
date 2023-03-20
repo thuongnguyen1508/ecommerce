@@ -1,0 +1,46 @@
+.product-item {
+  cursor: pointer;
+  border-radius: 10px;
+  border: none;
+}
+
+.product-item__img {
+  padding: 1rem 1rem;
+  height: 300px;
+}
+
+.product-item__img img {
+  height: 100%;
+  object-fit: contain;
+}
+
+.product-item__des {
+  font-family: "Open Sans", sans-serif;
+}
+
+.product-item__des--cate {
+  opacity: 0.8;
+  text-transform: capitalize;
+}
+
+.product-item__des--title {
+  opacity: 0.65;
+  font-weight: 700;
+  font-size: 1.2rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.product-item__des--value {
+  opacity: 0.65;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.product-item__des--icon i {
+  padding: 5px;
+  border-radius: 50%;
+  background-color: var(--black);
+  color: var(--white);
+}

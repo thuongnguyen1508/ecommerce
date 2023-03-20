@@ -1,0 +1,85 @@
+.hero-section {
+  width: 100%;
+  padding-bottom: 20rem;
+  padding-top: 10rem;
+  border-radius: 0 0 50px 50px;
+}
+
+.hero-section__bg {
+  background: url("../assets/images/hero-bg.jpg");
+  -webkit-filter: blur(1px);
+  -moz-filter: blur(1px);
+  -o-filter: blur(1px);
+  -ms-filter: blur(1px);
+  filter: blur(1px);
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: -1;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.hero-section__content {
+  background-color: var(--hero-bg);
+  padding: 2rem;
+}
+
+.product-best-sell {
+  background-color: var(--secondary-color-3);
+  color: var(--black);
+}
+
+.product-best-sell__img img {
+  object-fit: contain;
+  height: 20rem;
+}
+
+.product-services {
+  background-color: var(--secondary-color-3);
+}
+
+.product-testimonial__subtitle {
+  font-family: "Roboto", sans-serif;
+}
+
+.product-news__content {
+  background-color: var(--secondary-color-3);
+}
+
+.product-news__content--subtitle {
+  font-family: "Roboto", sans-serif;
+}
+
+.product-news__content--input {
+  background-color: var(--secondary-color-3);
+  font-family: "Roboto", sans-serif;
+  opacity: 0.65;
+}
+
+.product-news__img img {
+  object-fit: cover;
+  height: 30rem;
+}
+
+@media (max-width: 575.98px) {
+}
+
+@media (max-width: 991.98px) {
+  .product-best-sell__img {
+    display: none;
+  }
+  .product-best-sell__content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .product-news__img img {
+    object-fit: contain;
+    height: auto;
+  }
+}

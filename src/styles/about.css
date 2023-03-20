@@ -1,0 +1,154 @@
+.title {
+  padding-top: 1rem;
+}
+
+/* thay đổi dòng kẻ */
+
+.line-header,
+.line-content {
+  width: 30%;
+  height: 2px;
+  border-width: 0;
+  opacity: 1;
+}
+
+.line-header {
+  color: var(--black);
+  background-color: var(--black);
+  margin: 1rem auto;
+  width: 100%;
+}
+
+.line-content {
+  color: var(--primary-color-dark);
+  background-color: var(--primary-color-dark);
+}
+
+/* căn phải dòng kẻ */
+
+.align-end {
+  text-align: right;
+  margin-left: auto;
+}
+
+/* căn đều cả đoạn văn */
+.text-justify {
+  text-align: justify;
+}
+
+/* margin của thẻ h1 */
+
+.m-h1 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* margin cho ảnh */
+
+.m-img {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+/* đổi con trỏ cho tiêu đề */
+
+.title {
+  cursor: default;
+}
+
+/* hiệu ứng khi hover ảnh */
+
+.m-img:hover {
+  scale: 1.1;
+}
+
+/* hiệu ứng đổi màu tiêu đề */
+
+.title:hover {
+  text-transform: uppercase;
+  background-image: linear-gradient(
+    -225deg,
+    var(--primary-color-dark) 0%,
+    #44107a 29%,
+    #ff1361 67%,
+    #fff800 100%
+  );
+  background-size: auto auto;
+  background-clip: border-box;
+  background-size: 200% auto;
+  color: #fff;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: textclip 2s linear infinite;
+}
+
+@keyframes textclip {
+  to {
+    background-position: 200% center;
+  }
+}
+
+@media (max-width: 992px) {
+  .m-img:hover {
+    scale: 1;
+  }
+  .col1 {
+    order: 2;
+  }
+  .col2 {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .m-img {
+    display: none;
+  }
+  .text-end {
+    text-align: left !important;
+  }
+  .align-end {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 500px) {
+  .span-animation {
+    font-size: 1.5rem !important;
+  }
+}
+
+/* khoảng cách giữa các chữ đầu của đề mục */
+
+.left {
+  margin-left: 8px;
+}
+
+/* hiệu ứng đề mục nhảy chữ */
+
+.span-animation {
+  font-size: var(--heading-fontSize);
+  position: relative;
+  display: inline-block;
+}
+
+.waviy:hover > .span-animation {
+  cursor: default;
+  position: relative;
+  display: inline-block;
+  text-transform: uppercase;
+  animation: waviy 1s infinite;
+  animation-delay: calc(0.1s * var(--i));
+}
+
+@keyframes waviy {
+  0%,
+  40%,
+  100% {
+    transform: translateY(0);
+  }
+  20% {
+    transform: translateY(-20px);
+  }
+}
