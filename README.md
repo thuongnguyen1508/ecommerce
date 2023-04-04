@@ -1,6 +1,6 @@
-## **© 2022 University of Information Technology / CompuStore Project**
+## **© 2023 CompuStore Project**
 
-### **1. THÀNH VIÊN THAM GIA**
+<!-- ### **1. THÀNH VIÊN THAM GIA**
 
 <details>
   <summary>Thông tin nhóm phát triển</summary>
@@ -12,7 +12,7 @@
 | 3   | 20521768 | [Nguyễn Hoàng Phúc](https://github.com/phucnh20521768 "Nguyễn Hoàng Phúc") | KTPM2020 | Thành viên  |
 | 4   | 20521205 | [Dín Hiền Dũng](https://github.com/dung-ovl "Dín Hiền Dũng")               | KTPM2020 | Thành viên  |
 
-</details>
+</details> -->
 
 ## Available Scripts
 
