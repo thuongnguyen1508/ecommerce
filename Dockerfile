@@ -2,10 +2,11 @@
 FROM node:14-alpine AS build
 WORKDIR /app
 COPY package*.json ./
+COPY yarn.lock ./
 COPY firebase.json ./
-RUN npm ci
+RUN yarn install --frozen-lockfile
 COPY . .
-RUN npm run build
+RUN yarn build
 
 # Stage 2: Serve the built app
 FROM nginx:alpine
