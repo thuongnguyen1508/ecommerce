@@ -20,7 +20,7 @@ import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 function Routers() {
   return (
-    <PayPalScriptProvider options={{"client-id":"AZn5Rs7HKwRcAZ-BIi8d2S6KKUKSFkVscc7ODbBcGSNaQkR7SIk83RpuNNJKjIxmdxbCIuuwBlVX9-fO"}}>
+    <PayPalScriptProvider options={{"client-id":"dsssdsd"}}>
       <Routes>
         <Route path='/' element={<Navigate to='home' />} />
         <Route path='home' element={<Home />} />
