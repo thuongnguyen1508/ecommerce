@@ -16,22 +16,26 @@ import AddProduct from '../admin/AddProduct'
 import AllProduct from '../admin/AllProduct'
 import ProtetedRoute from './ProtetedRoute'
 import Dashboard from '../admin/Dashboard'
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 function Routers() {
   return (
-    <Routes>
-      <Route path='/' element={<Navigate to='home' />} />
-      <Route path='home' element={<Home />} />
-      <Route path='about' element={<About />} />
-      <Route path='cart' element={<Cart />} />
-      <Route path='products' element={<Products />} />
-      <Route path='checkout' element={<Checkout />} />
-      <Route path='products/:id' element={<ProductDetails />} />
-      <Route path='account' element={<Account />} />
-      <Route path='contact' element={<Contact />} />
-      <Route path='project' element={<Location />} />
-      <Route path='project/:id' element={<LocationDetail />} />
-    </Routes>
+    <PayPalScriptProvider options={{"client-id":"AZn5Rs7HKwRcAZ-BIi8d2S6KKUKSFkVscc7ODbBcGSNaQkR7SIk83RpuNNJKjIxmdxbCIuuwBlVX9-fO"}}>
+      <Routes>
+        <Route path='/' element={<Navigate to='home' />} />
+        <Route path='home' element={<Home />} />
+        <Route path='about' element={<About />} />
+        <Route path='cart' element={<Cart />} />
+        <Route path='products' element={<Products />} />
+        <Route path='checkout' element={<Checkout />} />
+        <Route path='products/:id' element={<ProductDetails />} />
+        <Route path='account' element={<Account />} />
+        <Route path='contact' element={<Contact />} />
+        <Route path='project' element={<Location />} />
+        <Route path='project/:id' element={<LocationDetail />} />
+      </Routes>
+    </PayPalScriptProvider>
+    
   )
 }
 

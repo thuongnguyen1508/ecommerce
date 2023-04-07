@@ -15,6 +15,8 @@ import { useDispatch } from "react-redux";
 import { CreateBill } from "../database/AddBill";
 import { Timestamp } from "firebase/firestore";
 import { Breadcrumb } from "react-bootstrap";
+import PaypalCheckoutButtons from "../components/Paypla/paypalbutton";
+import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
 function Checkout() {
   if (!hasLogin())
@@ -33,6 +35,7 @@ function Checkout() {
 
   const [methodShipping, setMethodShipping] = useState(1);
   const [discountCode, setDiscountCode] = useState('');
+
 
   const RandomIdOrder = (length) => {
     let result = '';
@@ -122,6 +125,11 @@ function Checkout() {
     // }
 
     setDiscountCode(code)
+  }
+
+  const product = {
+    description: "Demo Paypal Checkout",
+    price: 120
   }
 
   return (
@@ -229,6 +237,16 @@ function Checkout() {
                   </div>
                   <div className="collapse my-1 ms-5" id="collapseInstallmentMethod" data-bs-parent="#paymentField">
                     Liên hệ với FE Credit, FB00 Nhà cái đến từ địa phủ
+                  </div>
+
+                  <div className="form-check my-1">
+                    <input className="form-check-input" type="radio" name="methodPayment" id="installmentMethod" data-bs-toggle="collapse" href="#collapseInstallmentMethod" role="button" aria-expanded="false" aria-controls="collapseInstallmentMethod"></input>
+                    <label className="form-check-label" for="installmentMethod">
+                      Thanh toán bằng Paypal
+                    </label>
+                  </div>
+                  <div className="collapse my-1 ms-5" id="collapseInstallmentMethod" data-bs-parent="#paymentField">
+                      <PaypalCheckoutButtons product={product} />
                   </div>
 
                 </div>
