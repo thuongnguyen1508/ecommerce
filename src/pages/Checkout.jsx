@@ -85,6 +85,7 @@ function Checkout() {
       deliveryService.getDeliveryMethod(shopID, fromDistrictID, toDistrictID)
         .then((res) => {
           setMethodsList(res);
+          setShipping((old) => ({...old, TotalFee: 50000}));
         });
     }
 
@@ -92,11 +93,6 @@ function Checkout() {
 
   // Get calculate shipping fee
   useEffect(() => {
-    if (shipping?.ServiceID === 0) {
-      setShipping((old) => ({...old, TotalFee: 50000}));
-      return;
-    }
-
     if (shipping?.ServiceID) {
       const fromDistrictID = parseInt(process.env.REACT_APP_SHOP_DISTRICT_ID);
       const toDistrictID = parseInt(district.DistrictID);
