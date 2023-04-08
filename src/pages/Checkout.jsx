@@ -85,7 +85,12 @@ function Checkout() {
       deliveryService.getDeliveryMethod(shopID, fromDistrictID, toDistrictID)
         .then((res) => {
           setMethodsList(res);
-          setShipping((old) => ({...old, TotalFee: 50000}));
+          setShipping((old) => ({
+            ...old, 
+            ServiceID: 0, 
+            ShortName: "Chuyển phát truyền thống",
+            TotalFee: 50000
+          }));
         });
     }
 
