@@ -5,87 +5,27 @@ import {
     Row,
     Breadcrumb,
     Table,
-    Button,
     Form,
 } from "react-bootstrap";
 import Divide from "../components/UI/Divide";
-import Enumerable from "linq";
-import { Timestamp } from "firebase/firestore";
 import Helmet from "../components/Helmet/Helmet";
 import numeral from "numeral";
-import { firebaseFirestore } from "../database/InstanceFiresbase";
-import { doc, deleteDoc } from "@firebase/firestore";
 import UseGetData from "../database/UseGetData";
-import { toast } from "react-toastify";
 import { useState, useEffect } from "react";
-import { async } from "@firebase/util";
-import { Link } from "react-router-dom";
-import categoryData from "../assets/data/category";
 
 function Deliveries() {
     const { data: shippingData, loading } = UseGetData("shippings");
     const [shippings, setShipping] = useState(shippingData);
-    const [sort, setSort] = useState({ key: null, value: null });
-    const [filterPrice, setRangePrice] = useState({
-        min: 0,
-        max: Number.MAX_VALUE,
-    });
     const [filterName, setFilterName] = useState("");
-
-    const handleFilterPrice = (e) => {
-        const min = parseFloat(document.getElementById("floatingInputFrom").value);
-        const max = parseFloat(document.getElementById("floatingInputTo").value);
-        setRangePrice({
-            min: isNaN(min) ? 0 : min * 1000000,
-            max: isNaN(max) ? Number.MAX_VALUE : max * 1000000,
-        });
-    };
 
     const handleFilterName = (e) => {
         const typeFilter = e.target.value;
         setFilterName(typeFilter);
     };
-
-    const clearFilter = (e) => {
-        setSort({ key: null, value: null });
-        setRangePrice({ min: 0, max: Number.MAX_VALUE });
-        setFilterName("");
-    };
-
-    const updateView = () => {
-        var filter = Enumerable.from(shippingData)
-            .where(
-                (item) => item.totalFee >= filterPrice.min && item.totalFee <= filterPrice.max
-            )
-            .where((item) =>
-                item.shipping.toLowerCase().includes(filterName.toLowerCase())
-            );
-
-        switch (sort.key) {
-            case "title":
-                if (sort.value === "title-ascending")
-                    filter = filter.orderBy((item) => item.dateCreate);
-                else if (sort.value === "title-descending")
-                    filter = filter.orderByDescending((item) => item.dateCreate);
-                break;
-            case "price":
-                if (sort.value === "price-ascending")
-                    filter = filter.orderBy((item) => item.totalPrice);
-                else if (sort.value === "price-descending")
-                    filter = filter.orderByDescending((item) => item.totalPrice);
-                break;
-            default:
-                break;
-        }
-        setShipping(filter.toArray());
-    };
-    useEffect(updateView);
-
-    const handleSort = (e) => {
-        const typeFilter = e.target.dataset["filter"];
-        const valueFilter = e.target.value;
-        setSort({ key: typeFilter, value: valueFilter });
-    };
+    
+    useEffect(() => {
+        setShipping(shippingData);
+    }, [shippingData]);
 
     return (
         <Helmet title={"Quản lý giao hàng"}>
@@ -164,7 +104,6 @@ function Deliveries() {
                                 <h5 className="mb-0 d-block">Bộ lọc tìm kiếm</h5>
                                 <button
                                     className="btn btn-primary btn-sm py-2 px-4 opacity-100"
-                                    onClick={clearFilter}
                                 >
                                     Xóa lọc
                                 </button>
@@ -173,22 +112,20 @@ function Deliveries() {
                             <div className="d-flex align-items-center gap-3">
                                 <p className="mb-0 d-block">Lọc theo:</p>
                                 <select
-                                    onChange={handleSort}
                                     className="form-control form-select"
                                     aria-label=".form-select"
                                     data-filter="title"
                                 >
-                                    <option selected>Ngày tạo</option>
+                                    <option defaultValue>Ngày tạo</option>
                                     <option value="title-ascending">Tăng dần</option>
                                     <option value="title-descending">Giảm dần</option>
                                 </select>
                                 <select
                                     className="form-control form-select"
                                     aria-label=".form-select"
-                                    onChange={handleSort}
                                     data-filter="price"
                                 >
-                                    <option selected>Giá tiền</option>
+                                    <option defaultValue>Giá tiền</option>
                                     <option value="price-ascending">Giá từ thấp lên cao</option>
                                     <option value="price-descending">
                                         Giá từ cao xuống thấp
@@ -222,7 +159,6 @@ function Deliveries() {
                                 <div>
                                     <button
                                         className="btn btn-primary opacity-100 py-2 px-4 w-100 my-4"
-                                        onClick={handleFilterPrice}
                                     >
                                         <p>Áp dụng</p>
                                     </button>
