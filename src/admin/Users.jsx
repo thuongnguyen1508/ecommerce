@@ -49,7 +49,7 @@ function Users() {
                     <h3>Loading....</h3>
                   ) : (
                     usersData.map((item, index) => (
-                      <tr key={index} class="align-middle">
+                      <tr key={index} className="align-middle">
                         <td>{index + 1}</td>
                         <td>{item.name}</td>
                         <td className="text-capitalize">{item.email}</td>
