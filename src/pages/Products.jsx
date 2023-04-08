@@ -135,7 +135,7 @@ function Products() {
                     <div className="">
                       <input
                         type="number"
-                        class="form-control"
+                        className="form-control"
                         id="floatingInputFrom"
                         placeholder="₫ TỪ"
                       />
@@ -144,7 +144,7 @@ function Products() {
                     <div>
                       <input
                         type="number"
-                        class="form-control"
+                        className="form-control"
                         id="floatingInputTo"
                         placeholder="₫ ĐẾN"
                       />

@@ -134,7 +134,7 @@ function LocationDetail() {
           <div className="col-md-5 div-btn-detail-loc">
             <Link to={"/location"}>
               <button className="btn-detail-loc btn btn-primary btn-lg">
-                <i class="	fa fa-angle-left"></i>
+                <i className="	fa fa-angle-left"></i>
                 &nbsp;BACK TO
               </button>
             </Link>
