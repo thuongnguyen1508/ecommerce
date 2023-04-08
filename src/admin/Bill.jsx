@@ -126,7 +126,7 @@ function Bill() {
                                             <h3>Loading....</h3>
                                         ) : (
                                             bills.map((item, index) => (
-                                                    <tr key={index} class="align-middle">
+                                                    <tr key={index} className="align-middle">
                                                         <td>{index + 1}</td>
                                                         <td>{item.id}</td>
                                                         <td className="text-end ">
@@ -195,7 +195,7 @@ function Bill() {
                                     <div className="">
                                         <input
                                             type="number"
-                                            class="form-control"
+                                            className="form-control"
                                             id="floatingInputFrom"
                                             placeholder="₫ TỪ"
                                         />
@@ -204,7 +204,7 @@ function Bill() {
                                     <div>
                                         <input
                                             type="number"
-                                            class="form-control"
+                                            className="form-control"
                                             id="floatingInputTo"
                                             placeholder="₫ ĐẾN"
                                         />
