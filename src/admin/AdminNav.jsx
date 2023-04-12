@@ -18,6 +18,7 @@ import ProtetedRoute from "../routers/ProtetedRoute";
 import Dashboard from "../admin/Dashboard";
 import Users from "./Users";
 import Bill from "./Bill";
+import Deliveries from "./Delivery";
 
 const admin_nav_links = [
   {
@@ -31,6 +32,10 @@ const admin_nav_links = [
   {
     path: "dashboard/bills",
     display: "Quản lý đơn hàng",
+  },
+  {
+    path: "dashboard/shippings",
+    display: "Quản lý giao hàng",
   },
   {
     path: "dashboard/users",
@@ -241,7 +246,7 @@ function AdminNav({ route }) {
               }}
             >
               <i
-                class="ri-menu-line border border-4 rounded"
+                className="ri-menu-line border border-4 rounded"
                 style={{
                   fontSize: "3rem",
                 }}
@@ -253,6 +258,7 @@ function AdminNav({ route }) {
           <Route path="/*" element={<ProtetedRoute />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="dashboard/bills" element={<Bill />} />
+            <Route path="dashboard/shippings" element={<Deliveries />} />
             <Route path="dashboard/all-products" element={<AllProduct />} />
             <Route path="dashboard/add-products" element={<AddProduct />} />
             <Route path="dashboard/users" element={<Users />} />
