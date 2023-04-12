@@ -16,11 +16,10 @@ import AddProduct from '../admin/AddProduct'
 import AllProduct from '../admin/AllProduct'
 import ProtetedRoute from './ProtetedRoute'
 import Dashboard from '../admin/Dashboard'
-import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+
 
 function Routers() {
   return (
-    <PayPalScriptProvider options={{"client-id":"dsssdsd"}}>
       <Routes>
         <Route path='/' element={<Navigate to='home' />} />
         <Route path='home' element={<Home />} />
@@ -34,7 +33,6 @@ function Routers() {
         <Route path='project' element={<Location />} />
         <Route path='project/:id' element={<LocationDetail />} />
       </Routes>
-    </PayPalScriptProvider>
     
   )
 }
