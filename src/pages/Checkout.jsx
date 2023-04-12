@@ -262,7 +262,7 @@ function Checkout() {
                   </div>
                   <div className="collapse my-1 ms-5" id="collapsePaypalMethod" data-bs-parent="#paymentField">
                     <PaypalCheckoutButtons
-                      amount={totalPrice / 23000}
+                      amount={Math.round(totalPrice / 23000)}
                       currency="USD"
                       onApprove={onApprove}
                       onError={onError}
