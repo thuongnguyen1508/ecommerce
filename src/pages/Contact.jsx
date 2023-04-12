@@ -114,7 +114,7 @@ function Contact() {
                 <input
                   id="first-name"
                   type="text"
-                  class="form-control contact-input border-dark border-0 border-bottom"
+                  className="form-control contact-input border-dark border-0 border-bottom"
                   maxLength="255"
                   required
                   placeholder="Họ"
@@ -126,7 +126,7 @@ function Contact() {
                 <input
                   id="last-name"
                   type="text"
-                  class="form-control contact-input border-dark border-0 border-bottom"
+                  className="form-control contact-input border-dark border-0 border-bottom"
                   maxLength="255"
                   required
                   placeholder="Tên"
@@ -138,7 +138,7 @@ function Contact() {
                 <input
                   id="email"
                   type="email"
-                  class="form-control contact-input border-dark border-0 border-bottom"
+                  className="form-control contact-input border-dark border-0 border-bottom"
                   maxLength="255"
                   required
                   placeholder="Email"
@@ -150,7 +150,7 @@ function Contact() {
                 <textarea
                   id="comment"
                   rows="1"
-                  class="form-control contact-input my-2 border-dark border-0 border-bottom resize-vertical"
+                  className="form-control contact-input my-2 border-dark border-0 border-bottom resize-vertical"
                   number="3"
                   required
                   placeholder="Ghi chú"

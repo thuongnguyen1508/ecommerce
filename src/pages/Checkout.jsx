@@ -1,4 +1,5 @@
-import { React, useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import { React, useState, useEffect } from "react";
 import { Row, Col, Container } from "react-bootstrap";
 import "../styles/cart.css";
 import Helmet from "../components/Helmet/Helmet";
@@ -8,7 +9,7 @@ import numeral from "numeral";
 import Divide from "../components/UI/Divide";
 import { user } from "../database/Auth/Auth"
 import "../assets/data/local.js"
-import Country from "../assets/data/local.js";
+import Province from "../assets/data/province.js";
 import { toast } from "react-toastify";
 import { cartActions } from "../redux/slices/cartSlice";
 import { useDispatch } from "react-redux";
@@ -16,6 +17,8 @@ import { CreateBill } from "../database/AddBill";
 import { Timestamp } from "firebase/firestore";
 import { Breadcrumb } from "react-bootstrap";
 import PaypalCheckoutButtons from "../components/Paypal/paypalbutton";
+import { CreateShipping } from "../database/AddShipping";
+import { DeliveryService } from "../Helper/DeliveryService";
 
 function Checkout() {
   if (!hasLogin())
@@ -23,17 +26,98 @@ function Checkout() {
   const totalPrice = useSelector((state) => state.cart.totalAmount);
   const totalQuanlity = useSelector((state) => state.cart.totalQuanlity);
   const cartItems = useSelector((state) => state.cart.cartItems)
+  const deliveryService = new DeliveryService(`${process.env.REACT_APP_GHN_API}`, `${process.env.REACT_APP_GHN_TOKEN}`)
+
   const dispatch = useDispatch();
-  const [province, setProvince] = useState();
-  const [district, setDistrict] = useState();
+  const [province, setProvince] = useState({ ProvinceID: null, ProvinceName: null });
+  const [district, setDistrict] = useState({ DistrictID: null, DistrictName: null });
+  const [ward, setWard] = useState({ WardCode: null, WardName: null });
 
   const loginInfo = user()
   const name = loginInfo.displayName
   const email = loginInfo.email
   const phoneNumber = loginInfo.phoneNumber
 
-  const [methodShipping, setMethodShipping] = useState(1);
   const [discountCode, setDiscountCode] = useState('');
+  const [districtsList, setDistrictsList] = useState([]);
+  const [wardsList, setWardsList] = useState([]);
+  const [methodsList, setMethodsList] = useState([]);
+  const [shipping, setShipping] = useState({
+    ServiceID: null,
+    ShortName: null,
+    TotalFee: null,
+    EstimatedTime: null,
+    Note: null,
+    PaymentTypeID: null,
+    Weight: 200,
+    Length: 15,
+    Width: 10,
+    Height: 5,
+    Number: totalQuanlity
+  });
+
+  // Get districts list from province
+  useEffect(() => {
+    if (province.ProvinceID) {
+      deliveryService.getDistrict(province.ProvinceID)
+        .then((res) => {
+          setDistrictsList(res);
+        });
+    }
+  }, [province.ProvinceID]);
+
+  // Get wards list from district
+  useEffect(() => {
+    if (district.DistrictID) {
+      deliveryService.getWard(district.DistrictID)
+        .then((res) => {
+          setWardsList(res);
+        });
+    }
+  }, [district.DistrictID]);
+
+  // Get delivery methods
+  useEffect(() => {
+    if (ward.WardCode) {
+      const fromDistrictID = parseInt(process.env.REACT_APP_SHOP_DISTRICT_ID);
+      const toDistrictID = parseInt(district.DistrictID);
+      const shopID = parseInt(process.env.REACT_APP_SHOP_ID);
+
+      deliveryService.getDeliveryMethod(shopID, fromDistrictID, toDistrictID)
+        .then((res) => {
+          setMethodsList(res);
+          setShipping((old) => ({
+            ...old,
+            ServiceID: 0,
+            ShortName: "Chuyển phát truyền thống",
+            TotalFee: 50000
+          }));
+        });
+    }
+
+  }, [district.DistrictID, ward.WardCode]);
+
+  // Get calculate shipping fee
+  useEffect(() => {
+    if (shipping?.ServiceID) {
+      const fromDistrictID = parseInt(process.env.REACT_APP_SHOP_DISTRICT_ID);
+      const toDistrictID = parseInt(district.DistrictID);
+      const toWardCode = ward.WardCode;
+      const serviceID = shipping.ServiceID;
+
+      const dimemtion = {
+        height: 50,
+        length: 20,
+        weight: parseInt(200 * totalQuanlity),
+        width: 20
+      }
+
+      deliveryService.getEstimatedFee(fromDistrictID, toDistrictID, toWardCode, serviceID, totalQuanlity, dimemtion)
+        .then((res) => {
+          setShipping((old) => ({ ...old, TotalFee: res }));
+        })
+    }
+  }, [district.DistrictID, shipping.ServiceID, totalQuanlity, ward.WardCode]);
 
   const [paymentStatus, setPaymentStatus] = useState('');
 
@@ -50,7 +134,7 @@ function Checkout() {
   const onCancel = (data) => {
     setPaymentStatus('Đã hủy');
   };
-  
+
 
 
   const RandomIdOrder = (length) => {
@@ -76,17 +160,36 @@ function Checkout() {
       email: e.target.querySelector('input[name="emailCustomer"]').value,
       phone: e.target.querySelector('input[name="phoneCustomer"]').value,
       address: {
-        province: province,
-        district: district,
-        ward: e.target.querySelector('select[name="wardShipping"]').value,
+        province: province.ProvinceName,
+        district: district.DistrictName,
+        ward: ward.WardName,
         address: e.target.querySelector('input[name="addressShipping"]').value,
       },
       paymentMethod: Array.from(e.target.querySelectorAll('input[name="methodPayment"]')).find(item => item.checked)?.id,
       note: e.target.querySelector('textarea').value,
       products: cartItems.map(item => item.id),
       totalPrice: totalPrice,
-      methodShipping: methodShipping,
+      methodShipping: shipping.ShortName,
       discountCode: discountCode,
+      dateCreate: Timestamp.now()
+    }
+
+    const shippingService = {
+      billID: null,
+      products: cartItems.map(item => item.id),
+      name: e.target.querySelector('input[name="nameCustomer"]').value,
+      shippingService: shipping.ServiceID,
+      shipping: shipping.ShortName,
+      totalFee: shipping.TotalFee,
+      FromDistrictID: parseInt(process.env.REACT_APP_SHOP_DISTRICT_ID),
+      ToDistrictID: parseInt(district.DistrictID),
+      ToWardCode: parseInt(ward.WardCode),
+      address: `${bill.address.address}, ${bill.address.ward}, ${bill.address.district}, ${bill.address.province}`,
+      Height: shipping.Height,
+      Weight: shipping.Weight,
+      Width: shipping.Weight,
+      Number: totalQuanlity,
+      expectedDeliveryTime: null,
       dateCreate: Timestamp.now()
     }
 
@@ -104,31 +207,43 @@ function Checkout() {
       toast.warning("Vui lòng chọn phương thức thanh toán")
       isValid = false
     }
-    if(bill.paymentMethod === "paypalMethod" && paymentStatus !== "Thành công") {
+    if (bill.paymentMethod === "paypalMethod" && paymentStatus !== "Thành công") {
       toast.warning("Vui lòng thanh toán bằng Paypal trước")
       isValid = false
     }
 
-    // var resultSubmitBill = false
-
-    // if(await resultSubmitBill(bill)){
-    //   e.target.submit()
-    // }
-    // else {
-    //   toast...
-    // }
-
     if (isValid) {
       timeoutSubmit = true
-      await CreateBill(bill)
-      toast.success(`Đã đặt hàng thành công\nMã đơn hàng: ${RandomIdOrder(6)}`, { duration: 5000 })
+      shippingService.billID = await CreateBill(bill);
+      deliveryService.createShippingOrder(
+        2, bill.note, bill.name, bill.phone, bill.address.address,
+        ward.WardName, district.DistrictName, province.ProvinceName,
+        {
+          weight: shipping.Weight,
+          height: shipping.Height,
+          length: shipping.Length,
+          width: shipping.Width
+        },
+        cartItems.map((item) => ({
+          name: item.productName,
+          price: parseInt(item.totalPrice),
+          quantity: parseInt(item.quanlity)
+        })),
+        shipping.ServiceID
+      ).then((res) => {
+        shippingService.totalFee = res.total_fee;
+        shippingService.expectedDeliveryTime = res.expected_delivery_time;
+        CreateShipping(shippingService)
+      });
+
+      toast.success(`Đã đặt hàng thành công\nMã đơn hàng: ${RandomIdOrder(6)}`, { duration: 5000 });
       setTimeout(() => {
         dispatch(
           cartActions.resetCart({})
         );
         timeoutSubmit = false
         e.target.submit()
-      }, 5000)
+      }, 5000);
     }
 
     return false
@@ -136,13 +251,6 @@ function Checkout() {
 
   const checkDiscountCode = async (e) => {
     const code = e.target.value
-
-    // if (await checkDiscountCode(code)) {
-    //   setDiscountCode(code)
-    // }
-    // else {
-    //   toast...
-    // }
 
     setDiscountCode(code)
   }
@@ -182,26 +290,36 @@ function Checkout() {
                 <div id="addressField" className="container">
                   <div className="row">
                     <div className="col-md-4 col-12">
-                      <select className="form-select form-select-md" onChange={e => setProvince(e.target.value)}>
-                        <option selected>Tỉnh/Thành phố</option>
+                      <select className="form-select form-select-md" onChange={e => {
+                        const selectedProvince = Province.find(province => province.ProvinceID === parseInt(e.target.value));
+                        setProvince((old) => ({ ...old, ProvinceID: selectedProvince.ProvinceID, ProvinceName: selectedProvince.ProvinceName }));
+                        setDistrict((old) => ({ ...old, DistrictID: null, DistrictName: null }));
+                      }}>
+                        <option defaultValue>Tỉnh/Thành phố</option>
                         {
-                          Country.map(province => <option value={province.name}>{province.name}</option>)
+                          Province.map(province => <option value={province.ProvinceID} key={province.ProvinceID}>{province.NameExtension[1]}</option>)
                         }
                       </select>
                     </div>
                     <div className="col-md-4 col-12">
-                      <select className="form-select form-select-md" onChange={e => setDistrict(e.target.value)}>
-                        <option selected>Quận/Huyện</option>
+                      <select className="form-select form-select-md" onChange={e => {
+                        const selectedDistrict = districtsList.find(district => district.DistrictID === parseInt(e.target.value));
+                        setDistrict((old) => ({ ...old, DistrictID: selectedDistrict.DistrictID, DistrictName: selectedDistrict.DistrictName }));
+                      }}>
+                        <option defaultValue>Quận/Huyện</option>
                         {
-                          Country.find(item => item.name === province)?.districts.map(district => <option value={district.name}>{district.name}</option>)
+                          districtsList.map(district => <option key={district.DistrictID} value={district.DistrictID}>{district.DistrictName}</option>)
                         }
                       </select>
                     </div>
                     <div className="col-md-4 col-12">
-                      <select name="wardShipping" className="form-select form-select-md">
-                        <option selected>Phường/Xã</option>
+                      <select name="wardShipping" className="form-select form-select-md" onChange={e => {
+                        const selectedWard = wardsList.find(ward => parseInt(ward.WardCode) === parseInt(e.target.value));
+                        setWard((old) => ({ ...old, WardCode: selectedWard.WardCode, WardName: selectedWard.WardName }));
+                      }}>
+                        <option defaultValue>Phường/Xã</option>
                         {
-                          Country.find(item => item.name === province)?.districts.find(item => item.name === district)?.wards.map(ward => <option value={ward.name}>{ward.name}</option>)
+                          wardsList.map(ward => <option key={ward.WardCode} value={ward.WardCode}>{ward.WardName}</option>)
                         }
                       </select>
                     </div>
@@ -268,9 +386,9 @@ function Checkout() {
                       onError={onError}
                       onCancel={onCancel}
                     />
-                      {paymentStatus && (
+                    {paymentStatus && (
                       <p>Trạng thái thanh toán: {paymentStatus}</p>
-                      )}
+                    )}
                   </div>
 
                 </div>
@@ -286,19 +404,23 @@ function Checkout() {
                     <p className="">{totalQuanlity} sản phẩm</p>
                     <p className="">{numeral(totalPrice).format("0,0[.]00")}đ</p>
                   </div>
+                  <div className="d-flex justify-content-between my-2">
+                    <p className="">Phí vận chuyển</p>
+                    <p className="">{numeral(shipping.TotalFee).format("0,0[.]00")}đ</p>
+                  </div>
                   <div className="py-3">
                     <p className="mb-3">Vận chuyển</p>
                     <div className="">
                       <select
-                        className="form-select form-control"
-                        aria-label="Default select example"
-                        value={methodShipping}
-                        onChange={(e) => setMethodShipping(e.target.value)}
+                        className="form-select form-select-md"
+                        onChange={e => {
+                          const selectedMethod = methodsList.find(method => parseInt(method.service_id) === parseInt(e.target.value));
+                          setShipping((old) => ({ ...old, ServiceID: selectedMethod.service_id, ShortName: selectedMethod.short_name }));
+                        }}
                       >
-                        <option selected>Phương thức vận chuyển</option>
-                        <option value="1">Phương thức 1</option>
-                        <option value="2">Phương thức 1</option>
-                        <option value="3">Phương thức 1</option>
+                        {
+                          methodsList.map(method => <option key={method.service_id} value={method.service_id}>{method.short_name}</option>)
+                        }
                       </select>
                     </div>
                   </div>
@@ -325,7 +447,7 @@ function Checkout() {
                 <Divide />
                 <div className="d-flex justify-content-between my-3">
                   <p className="">TỔNG THANH TOÁN</p>
-                  <p className="">{numeral(totalPrice).format("0,0[.]00")}đ</p>
+                  <p className="">{numeral(totalPrice + shipping.TotalFee).format("0,0[.]00")}đ</p>
                 </div>
 
                 <button

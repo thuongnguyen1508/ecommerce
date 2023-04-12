@@ -92,7 +92,7 @@ function Header() {
                 </span>
                 {hasLogin() ? (
                   <>
-                    <div class="dropdown">
+                    <div className="dropdown">
                       <i
                         className="ri-user-fill icon cursor-pointer dropdown-toggle"
                         type="button"
@@ -101,7 +101,7 @@ function Header() {
                         aria-expanded="false"
                       ></i>
                       <ul
-                        class="dropdown-menu"
+                        className="dropdown-menu"
                         aria-labelledby="dropdownMenuButton1"
                       >
                         <li>
