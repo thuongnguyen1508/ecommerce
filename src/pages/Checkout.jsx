@@ -15,8 +15,7 @@ import { useDispatch } from "react-redux";
 import { CreateBill } from "../database/AddBill";
 import { Timestamp } from "firebase/firestore";
 import { Breadcrumb } from "react-bootstrap";
-import PaypalCheckoutButtons from "../components/Paypla/paypalbutton";
-import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+import PaypalCheckoutButtons from "../components/Paypal/paypalbutton";
 
 function Checkout() {
   if (!hasLogin())
@@ -35,6 +34,23 @@ function Checkout() {
 
   const [methodShipping, setMethodShipping] = useState(1);
   const [discountCode, setDiscountCode] = useState('');
+
+  const [paymentStatus, setPaymentStatus] = useState('');
+
+  const onApprove = async (data, actions) => {
+    const order = await actions.order.capture();
+    setPaymentStatus('Thành công');
+    toast.success("Đã thanh toán bằng Paypal thành công");
+  };
+
+  const onError = (err) => {
+    setPaymentStatus('Lỗi thanh toán');
+  };
+
+  const onCancel = (data) => {
+    setPaymentStatus('Đã hủy');
+  };
+  
 
 
   const RandomIdOrder = (length) => {
@@ -88,6 +104,10 @@ function Checkout() {
       toast.warning("Vui lòng chọn phương thức thanh toán")
       isValid = false
     }
+    if(bill.paymentMethod === "paypalMethod" && paymentStatus !== "Thành công") {
+      toast.warning("Vui lòng thanh toán bằng Paypal trước")
+      isValid = false
+    }
 
     // var resultSubmitBill = false
 
@@ -125,11 +145,6 @@ function Checkout() {
     // }
 
     setDiscountCode(code)
-  }
-
-  const product = {
-    description: "Demo Paypal Checkout",
-    price: 120
   }
 
   return (
@@ -240,13 +255,22 @@ function Checkout() {
                   </div>
 
                   <div className="form-check my-1">
-                    <input className="form-check-input" type="radio" name="methodPayment" id="installmentMethod" data-bs-toggle="collapse" href="#collapseInstallmentMethod" role="button" aria-expanded="false" aria-controls="collapseInstallmentMethod"></input>
-                    <label className="form-check-label" for="installmentMethod">
+                    <input className="form-check-input" type="radio" name="methodPayment" id="paypalMethod" data-bs-toggle="collapse" href="#collapsePaypalMethod" role="button" aria-expanded="false" aria-controls="collapsePaypalMethod"></input>
+                    <label className="form-check-label" for="paypalMethod">
                       Thanh toán bằng Paypal
                     </label>
                   </div>
-                  <div className="collapse my-1 ms-5" id="collapseInstallmentMethod" data-bs-parent="#paymentField">
-                      <PaypalCheckoutButtons product={product} />
+                  <div className="collapse my-1 ms-5" id="collapsePaypalMethod" data-bs-parent="#paymentField">
+                    <PaypalCheckoutButtons
+                      amount={totalPrice / 23000}
+                      currency="USD"
+                      onApprove={onApprove}
+                      onError={onError}
+                      onCancel={onCancel}
+                    />
+                      {paymentStatus && (
+                      <p>Trạng thái thanh toán: {paymentStatus}</p>
+                      )}
                   </div>
 
                 </div>
