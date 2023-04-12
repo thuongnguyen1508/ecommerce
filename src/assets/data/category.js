@@ -7,18 +7,18 @@ import laptopCategoryImg from '../images/laptop.jpg'
 
 
 const category = [
-    {
-        categoryName: "sofa",
-        imgUrl: sofaCategoryImg
-    },
+    // {
+    //     categoryName: "sofa",
+    //     imgUrl: sofaCategoryImg
+    // },
     {
         categoryName: "mobile",
         imgUrl: mobileCategoryImg
     },
-    {
-        categoryName: "chair",
-        imgUrl: chairCategoryImg
-    },
+    // {
+    //     categoryName: "chair",
+    //     imgUrl: chairCategoryImg
+    // },
     {
         categoryName: "watch",
         imgUrl: watchCategoryImg
