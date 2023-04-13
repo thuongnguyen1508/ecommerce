@@ -23,10 +23,10 @@ const nav_links = [
     path: "contact",
     display: "Liên hệ",
   },
-  {
-    path: "project",
-    display: "Dự án",
-  },
+  // {
+  //   path: "project",
+  //   display: "Dự án",
+  // },
 ];
 
 function Header() {
